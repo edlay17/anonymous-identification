@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigator Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+        }
+        .info-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .info-item span {
+            font-weight: bold;
+        }
+    </style>
+    <script src="./BrowserFingerprint.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Navigator Information</h2>
+        <ul id="info-list" class="info-list"></ul>
+    </div>
+
+    <script>
+        function formatValue(value) {
+            if (value === null || value === undefined) return value;
+            if (typeof value === 'object') return JSON.stringify(value);
+            return value.toString();
+        }
+
+        function displayNavigatorInfo() {
+            const navigatorUtils = new BrowserFingerprint();
+            const info = navigatorUtils.generate();
+            const infoList = document.getElementById('info-list');
+
+            console.log(info);
+
+            for (const [key, value] of Object.entries(info)) {
+                const listItem = document.createElement('li');
+                listItem.className = 'info-item';
+                listItem.innerHTML = `<span>${key}:</span> ${formatValue(value)}`;
+                infoList.appendChild(listItem);
+            }
+        }
+
+        displayNavigatorInfo();
+    </script>
+</body>
+</html>
