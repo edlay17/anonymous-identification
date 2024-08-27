@@ -29,6 +29,7 @@
 <body>
     <div class="container">
         <h2>Navigator Information</h2>
+        <canvas id="fingerprintCanvas" width="400" height="200"></canvas>
         <ul id="info-list" class="info-list"></ul>
     </div>
 
@@ -39,9 +40,9 @@
             return value.toString();
         }
 
-        function displayNavigatorInfo() {
+        async function displayNavigatorInfo() {
             const navigatorUtils = new BrowserFingerprint();
-            const info = navigatorUtils.generate();
+            const info = await navigatorUtils.generate();
             const infoList = document.getElementById('info-list');
 
             console.log(info);

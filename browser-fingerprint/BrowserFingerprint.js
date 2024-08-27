@@ -1,254 +1,551 @@
 class NavigatorData {
     getActiveVRDisplays() {
-        return navigator.activeVRDisplays || null;
+        try {
+            return navigator.activeVRDisplays || null;
+        } catch (error) {
+            console.error('Error in getActiveVRDisplays:', error);
+            return error;
+        }
     }
 
     getBluetooth() {
-        return navigator.bluetooth;
+        try {
+            return navigator.bluetooth;
+        } catch (error) {
+            console.error('Error in getBluetooth:', error);
+            return error;
+        }
     }
 
     getBuildID() {
-        return navigator.buildID;
+        try {
+            return navigator.buildID;
+        } catch (error) {
+            console.error('Error in getBuildID:', error);
+            return error;
+        }
     }
 
     getClipboard() {
-        return navigator.clipboard;
+        try {
+            return navigator.clipboard;
+        } catch (error) {
+            console.error('Error in getClipboard:', error);
+            return error;
+        }
     }
 
     getConnection() {
-        return {
-            connection: navigator.connection,
-            mozConnection: navigator.mozConnection,
-            webkitConnection: navigator.webkitConnection,
-        };
+        try {
+            return {
+                connection: navigator.connection,
+                mozConnection: navigator.mozConnection,
+                webkitConnection: navigator.webkitConnection,
+            };
+        } catch (error) {
+            console.error('Error in getConnection:', error);
+            return error;
+        }
     }
 
     getContacts() {
-        return navigator.contacts;
+        try {
+            return navigator.contacts;
+        } catch (error) {
+            console.error('Error in getContacts:', error);
+            return error;
+        }
     }
 
     getCookieEnabled() {
-        return navigator.cookieEnabled;
+        try {
+            return navigator.cookieEnabled;
+        } catch (error) {
+            console.error('Error in getCookieEnabled:', error);
+            return error;
+        }
     }
 
     getCredentials() {
-        return navigator.credentials;
+        try {
+            return navigator.credentials;
+        } catch (error) {
+            console.error('Error in getCredentials:', error);
+            return error;
+        }
     }
 
     getDeviceMemory() {
-        return navigator.deviceMemory;
+        try {
+            return navigator.deviceMemory;
+        } catch (error) {
+            console.error('Error in getDeviceMemory:', error);
+            return error;
+        }
     }
 
     getGeolocation() {
-        return navigator.geolocation;
+        try {
+            return navigator.geolocation;
+        } catch (error) {
+            console.error('Error in getGeolocation:', error);
+            return error;
+        }
     }
 
     getGlobalPrivacyControl() {
-        return navigator.globalPrivacyControl;
+        try {
+            return navigator.globalPrivacyControl;
+        } catch (error) {
+            console.error('Error in getGlobalPrivacyControl:', error);
+            return error;
+        }
     }
 
     getGPU() {
-        return navigator.gpu;
+        try {
+            return navigator.gpu;
+        } catch (error) {
+            console.error('Error in getGPU:', error);
+            return error;
+        }
     }
 
     getHardwareConcurrency() {
-        return navigator.hardwareConcurrency;
+        try {
+            return navigator.hardwareConcurrency;
+        } catch (error) {
+            console.error('Error in getHardwareConcurrency:', error);
+            return error;
+        }
     }
 
     getHID() {
-        return navigator.hid;
+        try {
+            return navigator.hid;
+        } catch (error) {
+            console.error('Error in getHID:', error);
+            return error;
+        }
     }
 
     getInk() {
-        return navigator.ink;
+        try {
+            return navigator.ink;
+        } catch (error) {
+            console.error('Error in getInk:', error);
+            return error;
+        }
     }
 
     getKeyboard() {
-        return navigator.keyboard;
+        try {
+            return navigator.keyboard;
+        } catch (error) {
+            console.error('Error in getKeyboard:', error);
+            return error;
+        }
     }
 
     getLanguage() {
-        return navigator.language;
+        try {
+            return navigator.language;
+        } catch (error) {
+            console.error('Error in getLanguage:', error);
+            return error;
+        }
     }
 
     getLanguages() {
-        return navigator.languages.join(',');
+        try {
+            return navigator.languages.join(',');
+        } catch (error) {
+            console.error('Error in getLanguages:', error);
+            return error;
+        }
     }
 
     getLocks() {
-        return navigator.locks;
+        try {
+            return navigator.locks;
+        } catch (error) {
+            console.error('Error in getLocks:', error);
+            return error;
+        }
     }
 
     getLogin() {
-        return navigator.login;
+        try {
+            return navigator.login;
+        } catch (error) {
+            console.error('Error in getLogin:', error);
+            return error;
+        }
     }
 
     getMaxTouchPoints() {
-        return navigator.maxTouchPoints;
+        try {
+            return navigator.maxTouchPoints;
+        } catch (error) {
+            console.error('Error in getMaxTouchPoints:', error);
+            return error;
+        }
     }
 
     getMediaCapabilities() {
-        return navigator.mediaCapabilities;
+        try {
+            return navigator.mediaCapabilities;
+        } catch (error) {
+            console.error('Error in getMediaCapabilities:', error);
+            return error;
+        }
     }
 
     getMediaDevices() {
-        return navigator.mediaDevices;
+        try {
+            return navigator.mediaDevices;
+        } catch (error) {
+            console.error('Error in getMediaDevices:', error);
+            return error;
+        }
     }
 
     getMediaSession() {
-        return navigator.mediaSession;
+        try {
+            return navigator.mediaSession;
+        } catch (error) {
+            console.error('Error in getMediaSession:', error);
+            return error;
+        }
     }
 
     getOnLine() {
-        return navigator.onLine;
+        try {
+            return navigator.onLine;
+        } catch (error) {
+            console.error('Error in getOnLine:', error);
+            return error;
+        }
     }
 
     getPdfViewerEnabled() {
-        return navigator.pdfViewerEnabled;
+        try {
+            return navigator.pdfViewerEnabled;
+        } catch (error) {
+            console.error('Error in getPdfViewerEnabled:', error);
+            return error;
+        }
     }
 
     getPermissions() {
-        return navigator.permissions;
+        try {
+            return navigator.permissions;
+        } catch (error) {
+            console.error('Error in getPermissions:', error);
+            return error;
+        }
     }
 
     getPresentation() {
-        return navigator.presentation;
+        try {
+            return navigator.presentation;
+        } catch (error) {
+            console.error('Error in getPresentation:', error);
+            return error;
+        }
     }
 
     getScheduling() {
-        return navigator.scheduling;
+        try {
+            return navigator.scheduling;
+        } catch (error) {
+            console.error('Error in getScheduling:', error);
+            return error;
+        }
     }
 
     getSerial() {
-        return navigator.serial;
+        try {
+            return navigator.serial;
+        } catch (error) {
+            console.error('Error in getSerial:', error);
+            return error;
+        }
     }
 
     getServiceWorker() {
-        return navigator.serviceWorker;
+        try {
+            return navigator.serviceWorker;
+        } catch (error) {
+            console.error('Error in getServiceWorker:', error);
+            return error;
+        }
     }
 
     getStorage() {
-        return navigator.storage;
+        try {
+            return navigator.storage;
+        } catch (error) {
+            console.error('Error in getStorage:', error);
+            return error;
+        }
     }
 
     getUSB() {
-        return navigator.usb;
+        try {
+            return navigator.usb;
+        } catch (error) {
+            console.error('Error in getUSB:', error);
+            return error;
+        }
     }
 
     getUserActivation() {
-        return navigator.userActivation;
+        try {
+            return navigator.userActivation;
+        } catch (error) {
+            console.error('Error in getUserActivation:', error);
+            return error;
+        }
     }
 
     getUserAgent() {
-        return navigator.userAgent;
+        try {
+            return navigator.userAgent;
+        } catch (error) {
+            console.error('Error in getUserAgent:', error);
+            return error;
+        }
     }
 
     getUserAgentData() {
-        return navigator.userAgentData;
+        try {
+            return navigator.userAgentData;
+        } catch (error) {
+            console.error('Error in getUserAgentData:', error);
+            return error;
+        }
     }
 
     getVirtualKeyboard() {
-        return navigator.virtualKeyboard;
+        try {
+            return navigator.virtualKeyboard;
+        } catch (error) {
+            console.error('Error in getVirtualKeyboard:', error);
+            return error;
+        }
     }
 
     getWakeLock() {
-        return navigator.wakeLock;
+        try {
+            return navigator.wakeLock;
+        } catch (error) {
+            console.error('Error in getWakeLock:', error);
+            return error;
+        }
     }
 
     getWebDriver() {
-        return navigator.webdriver;
+        try {
+            return navigator.webdriver;
+        } catch (error) {
+            console.error('Error in getWebDriver:', error);
+            return error;
+        }
     }
 
     getWindowControlsOverlay() {
-        return navigator.windowControlsOverlay;
+        try {
+            return navigator.windowControlsOverlay;
+        } catch (error) {
+            console.error('Error in getWindowControlsOverlay:', error);
+            return error;
+        }
     }
-    
+
     getCpuClasses() {
-        return navigator.cpuClass;
+        try {
+            return navigator.cpuClass;
+        } catch (error) {
+            console.error('Error in getCpuClasses:', error);
+            return error;
+        }
     }
 
     getDoNotTrack() {
-        return navigator.doNotTrack;
+        try {
+            return navigator.doNotTrack;
+        } catch (error) {
+            console.error('Error in getDoNotTrack:', error);
+            return error;
+        }
     }
 
     getMsDoNotTrack() {
-        return navigator.msDoNotTrack;
+        try {
+            return navigator.msDoNotTrack;
+        } catch (error) {
+            console.error('Error in getMsDoNotTrack:', error);
+            return error;
+        }
     }
 
     getXR() {
-        return navigator.xr;
+        try {
+            return navigator.xr;
+        } catch (error) {
+            console.error('Error in getXR:', error);
+            return error;
+        }
     }
 
     canShare() {
-        return navigator.canShare ? navigator.canShare() : false;
+        try {
+            return navigator.canShare ? navigator.canShare() : false;
+        } catch (error) {
+            console.error('Error in canShare:', error);
+            return error;
+        }
     }
 
     clearAppBadge() {
-        return navigator.clearAppBadge ? navigator.clearAppBadge() : undefined;
+        try {
+            return navigator.clearAppBadge ? navigator.clearAppBadge() : undefined;
+        } catch (error) {
+            console.error('Error in clearAppBadge:', error);
+            return error;
+        }
     }
 
     deprecatedReplaceInURN() {
-        return navigator.replaceInURN ? navigator.replaceInURN() : undefined;
+        try {
+            return navigator.replaceInURN ? navigator.replaceInURN() : undefined;
+        } catch (error) {
+            console.error('Error in deprecatedReplaceInURN:', error);
+            return error;
+        }
     }
 
     getAutoplayPolicy() {
-        return navigator.getAutoplayPolicy ? navigator.getAutoplayPolicy() : undefined;
+        try {
+            return navigator.getAutoplayPolicy ? navigator.getAutoplayPolicy() : undefined;
+        } catch (error) {
+            console.error('Error in getAutoplayPolicy:', error);
+            return error;
+        }
     }
 
     async getBattery() {
-        if (!navigator.getBattery) return navigator.getBattery;
+        try {
+            if (!navigator.getBattery) return navigator.getBattery;
 
-        const battery = await navigator.getBattery();
+            const battery = await navigator.getBattery();
 
-        return {
-            charging: battery.charging,
-            chargingTime: battery.chargingTime,
-            dischargingTime: battery.dischargingTime,
-            level: battery.level
-        };
+            return {
+                charging: battery.charging,
+                chargingTime: battery.chargingTime,
+                dischargingTime: battery.dischargingTime,
+                level: battery.level
+            };
+        } catch (error) {
+            console.error('Error in getBattery:', error);
+            return error;
+        }
     }
 
     getGamepads() {
-        return navigator.getGamepads ? navigator.getGamepads() : [];
+        try {
+            return navigator.getGamepads ? navigator.getGamepads() : [];
+        } catch (error) {
+            console.error('Error in getGamepads:', error);
+            return error;
+        }
     }
 
     getInstalledRelatedApps() {
-        return navigator.getInstalledRelatedApps ? navigator.getInstalledRelatedApps() : undefined;
+        try {
+            return navigator.getInstalledRelatedApps ? navigator.getInstalledRelatedApps() : undefined;
+        } catch (error) {
+            console.error('Error in getInstalledRelatedApps:', error);
+            return error;
+        }
     }
 
     registerProtocolHandler() {
-        return navigator.registerProtocolHandler;
+        try {
+            return navigator.registerProtocolHandler;
+        } catch (error) {
+            console.error('Error in registerProtocolHandler:', error);
+            return error;
+        }
     }
 
     requestMediaKeySystemAccess() {
-        return navigator.requestMediaKeySystemAccess;
+        try {
+            return navigator.requestMediaKeySystemAccess;
+        } catch (error) {
+            console.error('Error in requestMediaKeySystemAccess:', error);
+            return error;
+        }
     }
 
     requestMIDIAccess() {
-        return navigator.requestMIDIAccess;
+        try {
+            return navigator.requestMIDIAccess;
+        } catch (error) {
+            console.error('Error in requestMIDIAccess:', error);
+            return error;
+        }
     }
 
     sendBeacon() {
-        return navigator.sendBeacon;
+        try {
+            return navigator.sendBeacon;
+        } catch (error) {
+            console.error('Error in sendBeacon:', error);
+            return error;
+        }
     }
 
     setAppBadge() {
-        return navigator.setAppBadge;
+        try {
+            return navigator.setAppBadge;
+        } catch (error) {
+            console.error('Error in setAppBadge:', error);
+            return error;
+        }
     }
 
     share() {
-        return navigator.share;
+        try {
+            return navigator.share;
+        } catch (error) {
+            console.error('Error in share:', error);
+            return error;
+        }
     }
 
     unregisterProtocolHandler() {
-        return navigator.unregisterProtocolHandler;
+        try {
+            return navigator.unregisterProtocolHandler;
+        } catch (error) {
+            console.error('Error in unregisterProtocolHandler:', error);
+            return error;
+        }
     }
 
     vibrate() {
-        return navigator.vibrate;
+        try {
+            return navigator.vibrate;
+        } catch (error) {
+            console.error('Error in vibrate:', error);
+            return error;
+        }
     }
 
-    getNavigatorData() {
+    async getNavigatorData() {
+        const battery = await this.getBattery();
+
         return {
             activeVRDisplays: this.getActiveVRDisplays(),
             bluetooth: this.getBluetooth(),
@@ -295,7 +592,7 @@ class NavigatorData {
             clearAppBadge: this.clearAppBadge(),
             deprecatedReplaceInURN: this.deprecatedReplaceInURN(),
             getAutoplayPolicy: this.getAutoplayPolicy(),
-            battery: this.getBattery(),
+            battery,
             gamepads: this.getGamepads(),
             installedRelatedApps: this.getInstalledRelatedApps(),
             protocolHandler: this.registerProtocolHandler(),
@@ -308,15 +605,13 @@ class NavigatorData {
             vibrate: this.vibrate(),
             cpuClasses: this.getCpuClasses()
 
-            //canvas
-            //webgl
-            //audio
             //fonts
+            //TLS Fingerprint
         };
     }
 }
 
-class BrowserFingerprint {
+class GeneralData {
     getScreenSize() {
         return `${screen.width},${screen.height}`;
     }
@@ -325,7 +620,7 @@ class BrowserFingerprint {
         return `${screen.availWidth},${screen.availHeight}`;
     }
 
-    getColorDepth() { // device
+    getColorDepth() {
         return screen.colorDepth;
     }
 
@@ -368,10 +663,8 @@ class BrowserFingerprint {
         return isBlocked;
     }
 
-    generate() {
-        const navigatorData = new NavigatorData().getNavigatorData();
-
-        const fingerprintData = {
+    getGeneralData() {
+        return {
             screenSize: this.getScreenSize(),
             availSize: this.getAvailSize(),
             colorDepth: this.getColorDepth(),
@@ -383,31 +676,267 @@ class BrowserFingerprint {
             userData: this.isUserDataSupported(),
             indexedDBSupported: this.isIndexedDBSupported(),
             isAdBlockEnabled: this.isAdBlockEnabled(),
-            ...navigatorData,
+        }
+    }
+}
+
+class DeviceData {
+    async getCanvasFingerprint() {
+        const canvas = document.getElementById('fingerprintCanvas');
+        const ctx = canvas.getContext('2d');
+
+        ctx.textBaseline = 'top';
+
+        ctx.font = '20px "Arial Black", Gadget, sans-serif';
+        ctx.fillStyle = '#f60';
+        ctx.fillText('Hello, Arial Black!', 10, 10);
+
+        ctx.font = '20px "Comic Sans MS", cursive, sans-serif';
+        ctx.fillStyle = '#069';
+        ctx.fillText('Hello, Comic Sans MS!', 10, 40);
+
+        ctx.font = 'italic 18px "Courier New", Courier, monospace';
+        ctx.fillStyle = '#0f0';
+        ctx.fillText('Hello, Courier New!', 10, 70);
+
+        ctx.font = 'bold 18px "Times New Roman", Times, serif';
+        ctx.fillStyle = '#f00';
+        ctx.fillText('Hello, Times New Roman!', 10, 100);
+
+        ctx.font = '20px "Lucida Console", Monaco, monospace';
+        ctx.fillStyle = '#00f';
+        ctx.fillText('Hello, Lucida Console!', 10, 130);
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        ctx.shadowBlur = 4;
+
+        ctx.font = 'bold 16px "Verdana", Geneva, sans-serif';
+        ctx.fillStyle = '#900';
+        ctx.fillText('Hello, Verdana with Shadow!', 10, 160);
+
+        ctx.strokeStyle = 'rgba(102, 204, 0, 0.7)';
+        ctx.beginPath();
+        ctx.arc(350, 100, 50, 0, Math.PI * 2, true);
+        ctx.stroke();
+
+        const dataURL = canvas.toDataURL();
+        const hash = await hashString(dataURL);
+
+        return hash;
+    }
+
+    async getWebglFingerprint() {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                    
+        if (!gl) {
+            return 'WebGL not supported';
+        }
+        
+        const vertexShaderSource = 'attribute vec2 position; void main() { gl_Position = vec4(position, 0, 1); }';
+        const fragmentShaderSource = 'void main() { gl_FragColor = vec4(1, 0, 0.5, 1); }';
+        
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, vertexShaderSource);
+        gl.compileShader(vertexShader);
+        
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, fragmentShaderSource);
+        gl.compileShader(fragmentShader);
+        
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        gl.useProgram(program);
+        
+        const buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1,
+                1, -1,
+                -1, 1,
+                1, 1
+            ]), gl.STATIC_DRAW);
+        
+        const positionLocation = gl.getAttribLocation(program, 'position');
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+        
+        gl.clearColor(1, 1, 1, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        
+        const pixels = new Uint8Array(canvas.width * canvas.height * 4);
+        gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+
+        const hash = await hashString(pixels);
+
+        return hash;
+    }
+
+    async getAudioFingerprint() {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'triangle';
+
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0;
+
+            const compressor = audioContext.createDynamicsCompressor();
+            compressor.threshold.setValueAtTime(-50, audioContext.currentTime);
+            compressor.knee.setValueAtTime(40, audioContext.currentTime);
+            compressor.ratio.setValueAtTime(12, audioContext.currentTime);
+            compressor.attack.setValueAtTime(0, audioContext.currentTime);
+            compressor.release.setValueAtTime(0.25, audioContext.currentTime);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(compressor);
+            compressor.connect(audioContext.destination);
+
+            oscillator.start(0);
+
+            const analyser = audioContext.createAnalyser();
+            compressor.connect(analyser);
+
+            analyser.fftSize = 512;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Float32Array(bufferLength);
+            analyser.getFloatFrequencyData(dataArray);
+
+            oscillator.stop(audioContext.currentTime + 0.5);
+
+            const fingerprint = await hashBuffer(dataArray);
+            return fingerprint;
+
+        } catch (e) {
+            return 'Error generating audio fingerprint: ' + e.message;
+        }
+    }
+    
+    async getFontFingerprint() {
+        const fonts = [
+            'Arial', 'Arial Black', 'Verdana', 'Helvetica', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 
+            'Georgia', 'Garamond', 'Courier New', 'Brush Script MT', 'Comic Sans MS', 'Impact', 'Lucida Sans Unicode', 
+            'Palatino', 'Bookman', 'Candara', 'Courier', 'Arial Narrow', 'Consolas', 'Constantia', 'Corbel',
+            'Franklin Gothic Medium', 'Gill Sans', 'Futura', 'Century Gothic', 'Lucida Console', 'Lucida Sans',
+            'MS Serif', 'MS Sans Serif', 'Papyrus', 'Symbol', 'Verdana Pro', 'Wingdings', 'Calibri', 'Cambria', 
+            'Didot', 'Optima', 'Perpetua', 'Rockwell', 'Gill Sans MT', 'Times', 'Apple Chancery', 'Andale Mono', 
+            'Baskerville', 'Big Caslon', 'Charcoal', 'Copperplate', 'Hoefler Text', 'Monaco', 'New Century Schoolbook', 
+            'URW Chancery L', 'Webdings', 'Dingbats', 'Lucida Bright', 'PT Serif', 'Roboto', 'Ubuntu', 'Noto Sans',
+            'Segoe UI', 'Open Sans', 'Lato', 'Oswald', 'Slabo 27px', 'PT Sans', 'Merriweather', 'Arvo', 
+            'Josefin Sans', 'Poppins', 'Raleway', 'Playfair Display', 'Rubik', 'Montserrat', 'Nunito', 'Caveat', 
+            'Pacifico', 'Quicksand', 'Lobster', 'Dancing Script', 'Cinzel', 'Amatic SC', 'Abril Fatface', 'Anton',
+            'Bebas Neue', 'Fira Sans', 'Oxygen', 'Inconsolata', 'Kanit', 'Titillium Web', 'Vollkorn', 'Zilla Slab',
+            'Muli', 'Avenir', 'Segoe Script', 'Segoe Print', 'Lucida Handwriting', 'Goudy Old Style', 'Minion Pro',
+            'Plantagenet Cherokee', 'Academy Engraved LET', 'American Typewriter', 'Bangla Sangam MN', 'Marker Felt',
+            'Party LET', 'Snell Roundhand', 'Zapfino', 'Trebuchet', 'Wingdings 2', 'Wingdings 3'
+        ];
+
+        const baseFonts = ['monospace', 'sans-serif', 'serif'];
+
+        const sampleText = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:'\",.<>?/`~\\";
+        const testSize = '100px';
+
+        const createTestElement = (fontFamily) => {
+            const span = document.createElement('span');
+            span.style.fontSize = testSize;
+            span.style.fontFamily = fontFamily;
+            span.className = 'hidden';
+            span.textContent = sampleText;
+            document.body.appendChild(span);
+            return span;
         };
 
-        function wrapValuesWithGetData(data) {
-            const wrappedData = {};
-            Object.keys(data).forEach(key => {
-                wrappedData[key] = getData(data[key]);
-            });
-            return wrappedData;
+        const getElementSize = (element) => {
+            return { width: element.offsetWidth, height: element.offsetHeight };
+        };
+
+        const defaultSizes = {};
+
+        for (const baseFont of baseFonts) {
+            const span = createTestElement(baseFont);
+            defaultSizes[baseFont] = getElementSize(span);
+            document.body.removeChild(span);
         }
 
-        console.log(wrapValuesWithGetData(fingerprintData));
-        
-        
-        console.log(JSON.stringify(fingerprintData))
+        const buffer = new ArrayBuffer(fonts.length * 8);
+        const view = new DataView(buffer);
+
+        fonts.forEach((font, index) => {
+            const span = createTestElement(`${font}, monospace`);
+            const size = getElementSize(span);
+            document.body.removeChild(span);
+
+            if (size.width !== defaultSizes['monospace'].width || size.height !== defaultSizes['monospace'].height) {
+                view.setFloat32(index * 8, size.width);
+                view.setFloat32(index * 8 + 4, size.height);
+            } else {
+                view.setFloat32(index * 8, 0);
+                view.setFloat32(index * 8 + 4, 0);
+            }
+        });
+
+        const fingerprint = await hashBuffer(buffer);
+        return fingerprint;
+    }
+
+    async getDeviceData() {
+      const deviceData = await Promise.all([
+        this.getCanvasFingerprint(),
+        this.getWebglFingerprint(),
+        this.getAudioFingerprint(),
+        this.getFontFingerprint(),
+      ])
+
+      return {
+        canvas: deviceData[0],
+        webgl: deviceData[1],
+        audio: deviceData[2],
+        fonts: deviceData[3],
+      };
+    }
+}
+
+class BrowserFingerprint {
+    async generate() {
+        const fingerprints = await Promise.all([
+            new NavigatorData().getNavigatorData(),
+            new DeviceData().getDeviceData(),
+        ])
+
+        const general = new GeneralData().getGeneralData();;
+
+        const fingerprintData = {
+            general,
+            navigator: fingerprints[0],
+            device: {
+                ...fingerprints[1],
+            }
+        };
 
         return fingerprintData;
     }
 }
 
-function getData(variable) {
-    if (variable && typeof variable === 'object' && !Array.isArray(variable)) {
-        debugger;
-        console.log(JSON.stringify(variable))
-        return JSON.stringify(variable);
-    }
-    return variable;
+
+async function hashString(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    return hashHex;
+}
+
+function hashBuffer(buffer) {
+    return crypto.subtle.digest('SHA-256', buffer).then(hash => {
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    });
 }
