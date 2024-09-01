@@ -8,9 +8,17 @@ class NavigatorData {
         }
     }
 
-    getBluetooth() {
+    async getBluetooth() {
         try {
-            return navigator.bluetooth;
+            const bluetooth = navigator.bluetooth;
+            
+            if (bluetooth) {
+                const isAvailable = await getAvailability();
+                
+                return isAvailable;
+            }
+
+            return false;
         } catch (error) {
             console.error('Error in getBluetooth:', error);
             return error;
@@ -28,7 +36,7 @@ class NavigatorData {
 
     getClipboard() {
         try {
-            return navigator.clipboard;
+            return !!navigator.clipboard;
         } catch (error) {
             console.error('Error in getClipboard:', error);
             return error;
@@ -37,11 +45,13 @@ class NavigatorData {
 
     getConnection() {
         try {
-            return {
-                connection: navigator.connection,
-                mozConnection: navigator.mozConnection,
-                webkitConnection: navigator.webkitConnection,
+            const data = {
+                connection: !!navigator.connection,
+                mozConnection: !!navigator.mozConnection,
+                webkitConnection: !!navigator.webkitConnection,
             };
+
+            return JSON.stringify(data);
         } catch (error) {
             console.error('Error in getConnection:', error);
             return error;
@@ -68,7 +78,7 @@ class NavigatorData {
 
     getCredentials() {
         try {
-            return navigator.credentials;
+            return !!navigator.credentials;
         } catch (error) {
             console.error('Error in getCredentials:', error);
             return error;
@@ -84,9 +94,34 @@ class NavigatorData {
         }
     }
 
-    getGeolocation() {
+    async getGeolocation() {
         try {
-            return navigator.geolocation;
+            const result = navigator.permissions.query({ name: 'geolocation' })
+                .then((permissionStatus) => {
+                    if (permissionStatus.state === 'granted') {
+                        const geo = navigator.geolocation;
+
+                        if (!geo) return false;
+
+                        return new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(
+                                () => {
+                                    resolve(true);
+                                },
+                                ({ code, message }) => {
+                                    resolve(JSON.stringify({
+                                        code,
+                                        message,
+                                    }));
+                                }
+                            );
+                        });
+                    }
+
+                    return `Geolocation permission state: ${permissionStatus.state}`;
+                });
+            
+            return result;
         } catch (error) {
             console.error('Error in getGeolocation:', error);
             return error;
@@ -120,9 +155,15 @@ class NavigatorData {
         }
     }
 
-    getHID() {
+    async getHID() {
         try {
-            return navigator.hid;
+            const hid = navigator.hid;
+
+            if (!hid) return false;
+
+            return navigator.hid.getDevices().then((devices) => {
+                return JSON.stringify(devices);
+            });
         } catch (error) {
             console.error('Error in getHID:', error);
             return error;
@@ -131,7 +172,7 @@ class NavigatorData {
 
     getInk() {
         try {
-            return navigator.ink;
+            return !!navigator.ink;
         } catch (error) {
             console.error('Error in getInk:', error);
             return error;
@@ -140,7 +181,7 @@ class NavigatorData {
 
     getKeyboard() {
         try {
-            return navigator.keyboard;
+            return !!navigator.keyboard;
         } catch (error) {
             console.error('Error in getKeyboard:', error);
             return error;
@@ -167,7 +208,7 @@ class NavigatorData {
 
     getLocks() {
         try {
-            return navigator.locks;
+            return !!navigator.locks;
         } catch (error) {
             console.error('Error in getLocks:', error);
             return error;
@@ -188,15 +229,6 @@ class NavigatorData {
             return navigator.maxTouchPoints;
         } catch (error) {
             console.error('Error in getMaxTouchPoints:', error);
-            return error;
-        }
-    }
-
-    getMediaCapabilities() {
-        try {
-            return navigator.mediaCapabilities;
-        } catch (error) {
-            console.error('Error in getMediaCapabilities:', error);
             return error;
         }
     }
@@ -329,7 +361,7 @@ class NavigatorData {
 
     getVirtualKeyboard() {
         try {
-            return navigator.virtualKeyboard;
+            return !!navigator.virtualKeyboard;
         } catch (error) {
             console.error('Error in getVirtualKeyboard:', error);
             return error;
@@ -410,7 +442,7 @@ class NavigatorData {
 
     clearAppBadge() {
         try {
-            return navigator.clearAppBadge ? navigator.clearAppBadge() : undefined;
+            return !!navigator.clearAppBadge;
         } catch (error) {
             console.error('Error in clearAppBadge:', error);
             return error;
@@ -441,12 +473,7 @@ class NavigatorData {
 
             const battery = await navigator.getBattery();
 
-            return {
-                charging: battery.charging,
-                chargingTime: battery.chargingTime,
-                dischargingTime: battery.dischargingTime,
-                level: battery.level
-            };
+            return !!battery;
         } catch (error) {
             console.error('Error in getBattery:', error);
             return error;
@@ -455,16 +482,22 @@ class NavigatorData {
 
     getGamepads() {
         try {
-            return navigator.getGamepads ? navigator.getGamepads() : [];
+            return navigator.getGamepads ? JSON.stringify(navigator.getGamepads()) : [];
         } catch (error) {
             console.error('Error in getGamepads:', error);
             return error;
         }
     }
 
-    getInstalledRelatedApps() {
+    async getInstalledRelatedApps() {
         try {
-            return navigator.getInstalledRelatedApps ? navigator.getInstalledRelatedApps() : undefined;
+            if (!navigator.getInstalledRelatedApps) return false;
+
+            return navigator.getInstalledRelatedApps().then(relatedApps => {
+                return JSON.stringify(relatedApps);
+            }).catch(error => {
+                return(`Error getting installed related apps: ${error}`);
+            });
         } catch (error) {
             console.error('Error in getInstalledRelatedApps:', error);
             return error;
@@ -544,11 +577,17 @@ class NavigatorData {
     }
 
     async getNavigatorData() {
-        const battery = await this.getBattery();
+        const data = await Promise.all([
+            this.getBattery(),
+            this.getBluetooth(),
+            this.getGeolocation(),
+            this.getHID(),
+            this.getInstalledRelatedApps(),
+        ])
 
         return {
             activeVRDisplays: this.getActiveVRDisplays(),
-            bluetooth: this.getBluetooth(),
+            bluetooth: data[1],
             buildID: this.getBuildID(),
             clipboard: this.getClipboard(),
             connection: this.getConnection(),
@@ -556,11 +595,11 @@ class NavigatorData {
             cookieEnabled: this.getCookieEnabled(),
             credentials: this.getCredentials(),
             deviceMemory: this.getDeviceMemory(),
-            geolocation: this.getGeolocation(),
+            geolocation: data[2],
             globalPrivacyControl: this.getGlobalPrivacyControl(),
             gpu: this.getGPU(),
             hardwareConcurrency: this.getHardwareConcurrency(),
-            hid: this.getHID(),
+            hid: data[3],
             ink: this.getInk(),
             keyboard: this.getKeyboard(),
             language: this.getLanguage(),
@@ -568,7 +607,6 @@ class NavigatorData {
             locks: this.getLocks(),
             login: this.getLogin(),
             maxTouchPoints: this.getMaxTouchPoints(),
-            mediaCapabilities: this.getMediaCapabilities(),
             mediaDevices: this.getMediaDevices(),
             mediaSession: this.getMediaSession(),
             onLine: this.getOnLine(),
@@ -592,9 +630,9 @@ class NavigatorData {
             clearAppBadge: this.clearAppBadge(),
             deprecatedReplaceInURN: this.deprecatedReplaceInURN(),
             getAutoplayPolicy: this.getAutoplayPolicy(),
-            battery,
+            battery: data[0],
             gamepads: this.getGamepads(),
-            installedRelatedApps: this.getInstalledRelatedApps(),
+            installedRelatedApps: data[4],
             protocolHandler: this.registerProtocolHandler(),
             mediaKeySystemAccess: this.requestMediaKeySystemAccess(),
             midiAccess: this.requestMIDIAccess(),
@@ -885,12 +923,56 @@ class DeviceData {
         return fingerprint;
     }
 
+    async getMediaCapabilities() {
+        try {
+            const mediaFormats = [
+                { type: 'file', video: { contentType: 'video/webm; codecs="vp8"', width: 640, height: 480, bitrate: 500000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/webm; codecs="vp9"', width: 1920, height: 1080, bitrate: 8000000, framerate: 60 } },
+                { type: 'file', video: { contentType: 'video/webm; codecs="av1"', width: 1920, height: 1080, bitrate: 5000000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/mp4; codecs="avc1.42E01E"', width: 640, height: 480, bitrate: 500000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/mp4; codecs="avc1.4D401E"', width: 1280, height: 720, bitrate: 2000000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/mp4; codecs="avc1.64001F"', width: 1920, height: 1080, bitrate: 5000000, framerate: 60 } },
+                { type: 'file', video: { contentType: 'video/mp4; codecs="hev1.1.6.L93.B0"', width: 3840, height: 2160, bitrate: 10000000, framerate: 60 } },
+                { type: 'file', video: { contentType: 'video/mp4; codecs="av01.0.05M.08"', width: 1920, height: 1080, bitrate: 5000000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/ogg; codecs="theora"', width: 640, height: 480, bitrate: 500000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/x-matroska; codecs="avc1.42E01E"', width: 640, height: 480, bitrate: 500000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/x-matroska; codecs="vp8"', width: 640, height: 480, bitrate: 500000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/x-flv; codecs="vp6"', width: 640, height: 480, bitrate: 500000, framerate: 30 } },
+                { type: 'file', video: { contentType: 'video/x-flv; codecs="h263"', width: 640, height: 480, bitrate: 500000, framerate: 30 } },
+                { type: 'file', audio: { contentType: 'audio/mp4; codecs="mp4a.40.2"', channels: 2, bitrate: 128000, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/mp4; codecs="mp4a.40.5"', channels: 2, bitrate: 64000, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/webm; codecs="opus"', channels: 2, bitrate: 96000, samplerate: 48000 } },
+                { type: 'file', audio: { contentType: 'audio/webm; codecs="vorbis"', channels: 2, bitrate: 128000, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/ogg; codecs="opus"', channels: 2, bitrate: 96000, samplerate: 48000 } },
+                { type: 'file', audio: { contentType: 'audio/ogg; codecs="vorbis"', channels: 2, bitrate: 128000, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/mpeg; codecs="mp3"', channels: 2, bitrate: 128000, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/wav; codecs="1"', channels: 2, bitrate: 1411200, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/flac', channels: 2, bitrate: 1000000, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/aac', channels: 2, bitrate: 128000, samplerate: 44100 } },
+                { type: 'file', audio: { contentType: 'audio/3gpp; codecs="samr"', channels: 1, bitrate: 12200, samplerate: 8000 } },
+                { type: 'file', audio: { contentType: 'audio/3gpp2; codecs="sawb"', channels: 1, bitrate: 24000, samplerate: 16000 } },
+            ];
+
+            const formatsPromise = mediaFormats.map((format) => navigator.mediaCapabilities.decodingInfo(format));
+            const result = await Promise.all(formatsPromise);
+            
+            const resultJSON = JSON.stringify(result);
+            const hash = hashString(resultJSON);
+
+            return hash;
+        } catch (error) {
+            console.error('Error in getMediaCapabilities:', error);
+            return error;
+        }
+    }
+
     async getDeviceData() {
       const deviceData = await Promise.all([
         this.getCanvasFingerprint(),
         this.getWebglFingerprint(),
         this.getAudioFingerprint(),
         this.getFontFingerprint(),
+        this.getMediaCapabilities(),
       ])
 
       return {
@@ -898,6 +980,7 @@ class DeviceData {
         webgl: deviceData[1],
         audio: deviceData[2],
         fonts: deviceData[3],
+        mediaCapabilities: deviceData[4],
       };
     }
 }
@@ -914,9 +997,7 @@ class BrowserFingerprint {
         const fingerprintData = {
             general,
             navigator: fingerprints[0],
-            device: {
-                ...fingerprints[1],
-            }
+            device: fingerprints[1],
         };
 
         return fingerprintData;
