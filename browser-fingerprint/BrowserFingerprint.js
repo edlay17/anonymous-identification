@@ -996,6 +996,8 @@ class DeviceData {
         const dataURL = canvas.toDataURL();
         const hash = await hashString(dataURL);
 
+        canvas.style.display = 'none';
+
         return hash;
     }
 
