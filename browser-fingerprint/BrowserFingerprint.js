@@ -879,9 +879,6 @@ class NavigatorData {
             unregisterProtocolHandler: this.unregisterProtocolHandler(),
             vibrate: this.vibrate(),
             cpuClasses: this.getCpuClasses()
-
-            //fonts
-            //TLS Fingerprint
         };
     }
 }
