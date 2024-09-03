@@ -4,7 +4,7 @@ class NavigatorData {
             return navigator.activeVRDisplays || null;
         } catch (error) {
             console.error('Error in getActiveVRDisplays:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -21,7 +21,7 @@ class NavigatorData {
             return false;
         } catch (error) {
             console.error('Error in getBluetooth:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -30,7 +30,7 @@ class NavigatorData {
             return navigator.buildID;
         } catch (error) {
             console.error('Error in getBuildID:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -39,7 +39,7 @@ class NavigatorData {
             return !!navigator.clipboard;
         } catch (error) {
             console.error('Error in getClipboard:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -54,7 +54,7 @@ class NavigatorData {
             return JSON.stringify(data);
         } catch (error) {
             console.error('Error in getConnection:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -63,7 +63,7 @@ class NavigatorData {
             return navigator.contacts;
         } catch (error) {
             console.error('Error in getContacts:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -72,7 +72,7 @@ class NavigatorData {
             return navigator.cookieEnabled;
         } catch (error) {
             console.error('Error in getCookieEnabled:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -81,7 +81,7 @@ class NavigatorData {
             return !!navigator.credentials;
         } catch (error) {
             console.error('Error in getCredentials:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -90,7 +90,7 @@ class NavigatorData {
             return navigator.deviceMemory;
         } catch (error) {
             console.error('Error in getDeviceMemory:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -124,7 +124,7 @@ class NavigatorData {
             return result;
         } catch (error) {
             console.error('Error in getGeolocation:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -133,7 +133,7 @@ class NavigatorData {
             return navigator.globalPrivacyControl;
         } catch (error) {
             console.error('Error in getGlobalPrivacyControl:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -142,7 +142,7 @@ class NavigatorData {
             return navigator.gpu;
         } catch (error) {
             console.error('Error in getGPU:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -151,7 +151,7 @@ class NavigatorData {
             return navigator.hardwareConcurrency;
         } catch (error) {
             console.error('Error in getHardwareConcurrency:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -166,7 +166,7 @@ class NavigatorData {
             });
         } catch (error) {
             console.error('Error in getHID:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -175,7 +175,7 @@ class NavigatorData {
             return !!navigator.ink;
         } catch (error) {
             console.error('Error in getInk:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -184,7 +184,7 @@ class NavigatorData {
             return !!navigator.keyboard;
         } catch (error) {
             console.error('Error in getKeyboard:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -193,7 +193,7 @@ class NavigatorData {
             return navigator.language;
         } catch (error) {
             console.error('Error in getLanguage:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -202,7 +202,7 @@ class NavigatorData {
             return navigator.languages.join(',');
         } catch (error) {
             console.error('Error in getLanguages:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -211,7 +211,7 @@ class NavigatorData {
             return !!navigator.locks;
         } catch (error) {
             console.error('Error in getLocks:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -220,7 +220,7 @@ class NavigatorData {
             return navigator.login;
         } catch (error) {
             console.error('Error in getLogin:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -229,25 +229,94 @@ class NavigatorData {
             return navigator.maxTouchPoints;
         } catch (error) {
             console.error('Error in getMaxTouchPoints:', error);
-            return error;
+            return error.message;
         }
     }
 
-    getMediaDevices() {
+    async getMediaDevices() {
         try {
-            return navigator.mediaDevices;
+            return navigator.mediaDevices.enumerateDevices()
+                .then((data) => {
+                    const result = data.map(({kind, label}) => {
+                        return {
+                            name: kind,
+                            isAvailable: !!label,
+                        }
+                    })
+
+                    const resultJSON = JSON.stringify(result);
+
+                    return hashString(resultJSON);
+                });
         } catch (error) {
             console.error('Error in getMediaDevices:', error);
-            return error;
+            return error.message;
         }
     }
 
     getMediaSession() {
         try {
-            return navigator.mediaSession;
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: 'track name',
+                artist: 'author',
+                album: 'albom',
+                artwork: [
+                { src: 'https://example.com/album-art.jpg', sizes: '512x512', type: 'image/jpeg' }
+                ]
+            });
+
+            const mediaMetadata = navigator.mediaSession.metadata;
+
+            const metadata = {
+                title: mediaMetadata.title,
+                artist: mediaMetadata.artist,
+                album: mediaMetadata.album,
+                artwork: mediaMetadata.artwork.map(img => ({
+                    src: img.src,
+                    sizes: img.sizes,
+                    type: img.type
+                }))
+            };
+
+              const actions = [
+                'play',
+                'pause',
+                'previoustrack',
+                'nexttrack',
+                'seekbackward',
+                'seekforward',
+                'stop'
+            ];
+
+            function testAction(action) {
+                try {
+                    navigator.mediaSession.setActionHandler(action, () => {})
+
+                    return {
+                        action,
+                        isAvailable: true,
+                    }
+                } catch (error) {
+                    return {
+                        action,
+                        isAvailable: false,
+                    }
+                }
+            }
+
+            const supportedActions = actions.map(testAction);
+
+            const result = {
+                metadata,
+                supportedActions,
+            }
+
+            const resultJSON = JSON.stringify(result);
+
+            return resultJSON;
         } catch (error) {
             console.error('Error in getMediaSession:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -256,7 +325,7 @@ class NavigatorData {
             return navigator.onLine;
         } catch (error) {
             console.error('Error in getOnLine:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -265,79 +334,113 @@ class NavigatorData {
             return navigator.pdfViewerEnabled;
         } catch (error) {
             console.error('Error in getPdfViewerEnabled:', error);
-            return error;
+            return error.message;
         }
     }
 
-    getPermissions() {
+    async getPermissions() {
         try {
-            return navigator.permissions;
+            const permissionsToCheck = [
+                'geolocation',
+                'notifications',
+                'camera',
+                'microphone',
+                'midi',
+                'clipboard-read',
+                'clipboard-write',
+                'push',
+                'background-sync',
+                'ambient-light-sensor',
+                'accelerometer',
+                'gyroscope',
+                'magnetometer',
+                'accessibility-events',
+                'clipboard-read',
+                'clipboard-write',
+            ];
+
+            const results = {};
+
+            for (const permissionName of permissionsToCheck) {
+                try {
+                    const permissionStatus = await navigator.permissions.query({ name: permissionName });
+                    results[permissionName] = permissionStatus.state;
+                } catch (error) {
+                    results[permissionName] = 'Permission not supported or query failed';
+                }
+            }
+
+            return JSON.stringify(results);
         } catch (error) {
             console.error('Error in getPermissions:', error);
-            return error;
+            return error.message;
         }
     }
 
     getPresentation() {
         try {
-            return navigator.presentation;
+            return !!navigator.presentation;
         } catch (error) {
             console.error('Error in getPresentation:', error);
-            return error;
+            return error.message;
         }
     }
 
     getScheduling() {
         try {
-            return navigator.scheduling;
+            return !!(navigator.scheduling && navigator.scheduling.isInputPending);
         } catch (error) {
             console.error('Error in getScheduling:', error);
-            return error;
+            return error.message;
         }
     }
 
-    getSerial() {
+    async getSerial() {
         try {
-            return navigator.serial;
+            const ports = await navigator.serial.getPorts();
+            return JSON.stringify(ports);
         } catch (error) {
             console.error('Error in getSerial:', error);
-            return error;
+            return error.message;
         }
     }
 
     getServiceWorker() {
         try {
-            return navigator.serviceWorker;
+            return !!navigator.serviceWorker;
         } catch (error) {
             console.error('Error in getServiceWorker:', error);
-            return error;
+            return error.message;
         }
     }
 
-    getStorage() {
+    async getStorage() {
         try {
-            return navigator.storage;
+            const isPersistent = await navigator.storage.persisted();
+
+            return isPersistent ? 'persistent' : 'not persistent';
         } catch (error) {
             console.error('Error in getStorage:', error);
-            return error;
+            return error.message;
         }
     }
 
-    getUSB() {
+    async getUSB() {
         try {
-            return navigator.usb;
+            const devices = await navigator.usb.getDevices();
+            return JSON.stringify(devices);
         } catch (error) {
             console.error('Error in getUSB:', error);
-            return error;
+            return error.message;
         }
     }
 
     getUserActivation() {
         try {
-            return navigator.userActivation;
+            return !!navigator.userActivation;
         } catch (error) {
             console.error('Error in getUserActivation:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -346,16 +449,28 @@ class NavigatorData {
             return navigator.userAgent;
         } catch (error) {
             console.error('Error in getUserAgent:', error);
-            return error;
+            return error.message;
         }
     }
 
     getUserAgentData() {
         try {
-            return navigator.userAgentData;
+            const {
+                brands,
+                isMobile,
+                platform
+            } = navigator.userAgentData;
+
+            const result = {
+                brands,
+                isMobile,
+                platform
+            }
+
+            return JSON.stringify(result);
         } catch (error) {
             console.error('Error in getUserAgentData:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -364,16 +479,16 @@ class NavigatorData {
             return !!navigator.virtualKeyboard;
         } catch (error) {
             console.error('Error in getVirtualKeyboard:', error);
-            return error;
+            return error.message;
         }
     }
 
     getWakeLock() {
         try {
-            return navigator.wakeLock;
+            return !!navigator.wakeLock.request;
         } catch (error) {
             console.error('Error in getWakeLock:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -382,16 +497,16 @@ class NavigatorData {
             return navigator.webdriver;
         } catch (error) {
             console.error('Error in getWebDriver:', error);
-            return error;
+            return error.message;
         }
     }
 
     getWindowControlsOverlay() {
         try {
-            return navigator.windowControlsOverlay;
+            return !!navigator.windowControlsOverlay;
         } catch (error) {
             console.error('Error in getWindowControlsOverlay:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -400,7 +515,7 @@ class NavigatorData {
             return navigator.cpuClass;
         } catch (error) {
             console.error('Error in getCpuClasses:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -409,7 +524,7 @@ class NavigatorData {
             return navigator.doNotTrack;
         } catch (error) {
             console.error('Error in getDoNotTrack:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -418,16 +533,28 @@ class NavigatorData {
             return navigator.msDoNotTrack;
         } catch (error) {
             console.error('Error in getMsDoNotTrack:', error);
-            return error;
+            return error.message;
         }
     }
 
-    getXR() {
+    async getXR() {
         try {
-            return navigator.xr;
+            const availableSessions = await Promise.all([
+                navigator.xr.isSessionSupported('immersive-vr'),
+                navigator.xr.isSessionSupported('immersive-ar'),
+                navigator.xr.isSessionSupported('inline'),
+            ]) 
+
+            const result = {
+                vr: availableSessions[0],
+                ar: availableSessions[1],
+                inline: availableSessions[2],
+            }
+
+            return JSON.stringify(result);
         } catch (error) {
             console.error('Error in getXR:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -436,7 +563,7 @@ class NavigatorData {
             return navigator.canShare ? navigator.canShare() : false;
         } catch (error) {
             console.error('Error in canShare:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -445,7 +572,7 @@ class NavigatorData {
             return !!navigator.clearAppBadge;
         } catch (error) {
             console.error('Error in clearAppBadge:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -454,7 +581,7 @@ class NavigatorData {
             return navigator.replaceInURN ? navigator.replaceInURN() : undefined;
         } catch (error) {
             console.error('Error in deprecatedReplaceInURN:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -463,7 +590,7 @@ class NavigatorData {
             return navigator.getAutoplayPolicy ? navigator.getAutoplayPolicy() : undefined;
         } catch (error) {
             console.error('Error in getAutoplayPolicy:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -476,7 +603,7 @@ class NavigatorData {
             return !!battery;
         } catch (error) {
             console.error('Error in getBattery:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -485,7 +612,7 @@ class NavigatorData {
             return navigator.getGamepads ? JSON.stringify(navigator.getGamepads()) : [];
         } catch (error) {
             console.error('Error in getGamepads:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -500,52 +627,154 @@ class NavigatorData {
             });
         } catch (error) {
             console.error('Error in getInstalledRelatedApps:', error);
-            return error;
+            return error.message;
         }
     }
 
     registerProtocolHandler() {
         try {
-            return navigator.registerProtocolHandler;
+            return !!navigator.registerProtocolHandler;
         } catch (error) {
             console.error('Error in registerProtocolHandler:', error);
-            return error;
+            return error.message;
         }
     }
 
-    requestMediaKeySystemAccess() {
+    async requestMediaKeySystemAccess() {
         try {
-            return navigator.requestMediaKeySystemAccess;
+            const keySystem = 'com.widevine.alpha'; // Widevine для Chrome и Android
+
+            const config = [
+            {
+                initDataTypes: ['cenc', 'webm'], // Common Encryption и WebM
+                audioCapabilities: [
+                { contentType: 'audio/mp4; codecs="mp4a.40.2"' },  // AAC (Advanced Audio Codec)
+                { contentType: 'audio/webm; codecs="opus"' }       // Opus (WebM формат)
+                ],
+                videoCapabilities: [
+                { contentType: 'video/mp4; codecs="avc1.42E01E"' }, // H.264 (MP4)
+                { contentType: 'video/mp4; codecs="hev1.1.6.L93.90"' }, // H.265/HEVC (MP4)
+                { contentType: 'video/webm; codecs="vp8"' },        // VP8 (WebM)
+                { contentType: 'video/webm; codecs="vp9"' },        // VP9 (WebM)
+                { contentType: 'video/mp4; codecs="av01.0.04M.08"' } // AV1 (MP4)
+                ]
+            },
+            {
+                initDataTypes: ['cenc'],
+                audioCapabilities: [
+                { contentType: 'audio/mp4; codecs="ac-3"' },  // Dolby Digital (AC-3)
+                { contentType: 'audio/mp4; codecs="ec-3"' }   // Dolby Digital Plus (E-AC-3)
+                ],
+                videoCapabilities: [
+                { contentType: 'video/mp4; codecs="avc1.4D401E"' }, // H.264 Main Profile
+                { contentType: 'video/mp4; codecs="hev1.1.6.L120.90"' }, // H.265/HEVC High Tier
+                { contentType: 'video/mp4; codecs="av01.0.08M.10.0.110.01.01.01.0"' } // AV1 High Profile
+                ]
+            },
+            {
+                initDataTypes: ['keyids', 'mp4'], // Идентификаторы ключей и MP4
+                audioCapabilities: [
+                { contentType: 'audio/mp4; codecs="mp4a.40.5"' },  // AAC-LC
+                { contentType: 'audio/mp4; codecs="ac-3"' },  // Dolby Digital (AC-3)
+                { contentType: 'audio/mp4; codecs="ec-3"' }   // Dolby Digital Plus (E-AC-3)
+                ],
+                videoCapabilities: [
+                { contentType: 'video/mp4; codecs="hvc1.1.6.L93.B0"' }, // H.265/HEVC (MP4)
+                { contentType: 'video/mp4; codecs="vp09.00.10.08"' }, // VP9 Profile 0
+                { contentType: 'video/mp4; codecs="av01.0.05M.10"' } // AV1 (MP4)
+                ]
+            },
+            {
+                initDataTypes: ['cenc'],
+                audioCapabilities: [
+                { contentType: 'audio/mp4; codecs="mp4a.40.2"' }, // AAC-LC
+                { contentType: 'audio/mp4; codecs="mp4a.40.5"' }, // HE-AAC
+                { contentType: 'audio/mp4; codecs="ac-3"' }, // Dolby Digital (AC-3)
+                { contentType: 'audio/mp4; codecs="ec-3"' } // Dolby Digital Plus (E-AC-3)
+                ],
+                videoCapabilities: [
+                { contentType: 'video/mp4; codecs="avc1.42E01E"' }, // H.264 Baseline Profile
+                { contentType: 'video/mp4; codecs="avc1.4D401E"' }, // H.264 Main Profile
+                { contentType: 'video/mp4; codecs="hev1.1.6.L93.B0"' }, // H.265/HEVC (Main Profile)
+                { contentType: 'video/mp4; codecs="vp09.00.50.08"' }, // VP9 Profile 2
+                { contentType: 'video/mp4; codecs="av01.0.05M.08"' } // AV1 Main Profile
+                ]
+            }
+            ];
+
+            return navigator.requestMediaKeySystemAccess(keySystem, config)
+                .then(mediaKeySystemAccess => {
+                    const configurations = mediaKeySystemAccess.getConfiguration();
+                    const configurationsJSON = JSON.stringify(configurations);
+                    return hashString(configurationsJSON);
+                })
+                .catch(error => {
+                    return error.message;
+                });
         } catch (error) {
             console.error('Error in requestMediaKeySystemAccess:', error);
-            return error;
+            return error.message;
         }
     }
 
-    requestMIDIAccess() {
+    async requestMIDIAccess() {
         try {
-            return navigator.requestMIDIAccess;
+            return navigator.requestMIDIAccess().then(
+                (midiAccess) => {
+                    const result = {
+                        accessGranted: true,
+                        input: [],
+                        output: [],
+                    }
+
+                    for (const input of midiAccess.inputs.values()) {
+                        result.input.push(input.name);
+                    }
+
+                    for (const output of midiAccess.outputs.values()) {
+                        result.input.push(output.name);
+                    }
+
+                    const resultJSON = JSON.stringify(result);
+                    return hashString(resultJSON);
+                },
+                (error) => {
+                    return error.message;
+                }
+            );
         } catch (error) {
-            console.error('Error in requestMIDIAccess:', error);
-            return error;
+            return error.message;
         }
     }
 
     sendBeacon() {
         try {
-            return navigator.sendBeacon;
+            const url = 'https://server.localhost/analytics';
+
+            const data = JSON.stringify({
+              event: 'pageUnload',
+              timestamp: new Date().toISOString(),
+            });
+          
+            const success = navigator.sendBeacon(url, data);
+          
+            if (success) {
+              return 'Beacon sent successfully';
+            } else {
+              return 'Failed to send beacon';
+            }
         } catch (error) {
             console.error('Error in sendBeacon:', error);
-            return error;
+            return error.message;
         }
     }
 
     setAppBadge() {
         try {
-            return navigator.setAppBadge;
+            return !!navigator.setAppBadge;
         } catch (error) {
             console.error('Error in setAppBadge:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -554,25 +783,25 @@ class NavigatorData {
             return navigator.share;
         } catch (error) {
             console.error('Error in share:', error);
-            return error;
+            return error.message;
         }
     }
 
     unregisterProtocolHandler() {
         try {
-            return navigator.unregisterProtocolHandler;
+            return !!navigator.unregisterProtocolHandler;
         } catch (error) {
             console.error('Error in unregisterProtocolHandler:', error);
-            return error;
+            return error.message;
         }
     }
 
     vibrate() {
         try {
-            return navigator.vibrate;
+            return !!navigator.vibrate;
         } catch (error) {
             console.error('Error in vibrate:', error);
-            return error;
+            return error.message;
         }
     }
 
@@ -583,6 +812,14 @@ class NavigatorData {
             this.getGeolocation(),
             this.getHID(),
             this.getInstalledRelatedApps(),
+            this.getMediaDevices(),
+            this.requestMediaKeySystemAccess(),
+            this.requestMIDIAccess(),
+            this.getPermissions(),
+            this.getSerial(),
+            this.getStorage(),
+            this.getUSB(),
+            this.getXR(),
         ])
 
         return {
@@ -607,17 +844,17 @@ class NavigatorData {
             locks: this.getLocks(),
             login: this.getLogin(),
             maxTouchPoints: this.getMaxTouchPoints(),
-            mediaDevices: this.getMediaDevices(),
+            mediaDevices: data[5],
             mediaSession: this.getMediaSession(),
             onLine: this.getOnLine(),
             pdfViewerEnabled: this.getPdfViewerEnabled(),
-            permissions: this.getPermissions(),
+            permissions: data[8],
             presentation: this.getPresentation(),
             scheduling: this.getScheduling(),
-            serial: this.getSerial(),
+            serial: data[9],
             serviceWorker: this.getServiceWorker(),
-            storage: this.getStorage(),
-            usb: this.getUSB(),
+            storage: data[10],
+            usb: data[11],
             userActivation: this.getUserActivation(),
             userAgent: this.getUserAgent(),
             userAgentData: this.getUserAgentData(),
@@ -625,7 +862,7 @@ class NavigatorData {
             wakeLock: this.getWakeLock(),
             webdriver: this.getWebDriver(),
             windowControlsOverlay: this.getWindowControlsOverlay(),
-            xr: this.getXR(),
+            xr: data[12],
             canShare: this.canShare(),
             clearAppBadge: this.clearAppBadge(),
             deprecatedReplaceInURN: this.deprecatedReplaceInURN(),
@@ -634,8 +871,8 @@ class NavigatorData {
             gamepads: this.getGamepads(),
             installedRelatedApps: data[4],
             protocolHandler: this.registerProtocolHandler(),
-            mediaKeySystemAccess: this.requestMediaKeySystemAccess(),
-            midiAccess: this.requestMIDIAccess(),
+            mediaKeySystemAccess: data[6],
+            midiAccess: data[7],
             sendBeacon: this.sendBeacon(),
             setAppBadge: this.setAppBadge(),
             share: this.share(),
@@ -962,7 +1199,7 @@ class DeviceData {
             return hash;
         } catch (error) {
             console.error('Error in getMediaCapabilities:', error);
-            return error;
+            return error.message;
         }
     }
 
