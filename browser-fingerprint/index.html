@@ -25,12 +25,21 @@
         }
     </style>
     <script src="./BrowserFingerprint.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const button = document.getElementById('copy-btn');
+            button.addEventListener('click', () => {
+                navigator.clipboard.writeText(JSON.stringify(window.generatedInfo));
+            })
+        })
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Navigator Information</h1>
         <canvas id="fingerprintCanvas" width="400" height="200"></canvas>
-        <ul id="info-list" class="info-list"></ul>
+        <div id="info-list" class="info-list"></div>
+        <button id="copy-btn">copy</button>
     </div>
 
     <script>
@@ -42,14 +51,14 @@
 
         async function displayNavigatorInfo() {
             const navigatorUtils = new BrowserFingerprint();
-            const info = await navigatorUtils.generate();
+            window.generatedInfo = await navigatorUtils.generate();
             const infoList = document.getElementById('info-list');
 
-            console.log(info);
+            console.log(window.generatedInfo);
 
             const data = document.createElement('div');
             data.className = 'info-item';
-            data.innerHTML = JSON.stringify(info);
+            data.innerHTML = JSON.stringify(generatedInfo);
             infoList.appendChild(data);
         }
 

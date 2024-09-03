@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON diff checker</title>
+    <style>
+        textarea {
+            width: 500px; 
+            height: 500px;
+        }
+
+        .textareas-wrapper {
+            display: flex; 
+            column-gap:30px; 
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea1 = document.getElementById('json1');
+            const textarea2 = document.getElementById('json2');
+            const button = document.getElementById('checkDiff');
+
+            button.addEventListener('click', () => {
+                const json1 = textarea1.value;
+                const json2 = textarea2.value;
+
+                try {
+                    const data1 = JSON.parse(json1);
+                    const data2 = JSON.parse(json2);
+
+                    const {
+                        device: device1,
+                        general: general1,
+                        navigator: navigator1,
+                    } = data1;
+
+                    const {
+                        device: device2,
+                        general: general2,
+                        navigator: navigator2,
+                    } = data2;
+
+                    let deviceCount = 0;
+                    let generalCount = 0;
+                    let navigatorCount = 0;
+
+                    let deviceSameCount = 0;
+                    let generalSameCount = 0;
+                    let navigatorSameCount = 0;
+
+                    const deviceCompare = {};
+                    for (let key of Object.keys(device1)) {
+                        deviceCount++;
+                        if (device1[key] === device2[key]) {
+                            deviceCompare[key] = true;
+                            deviceSameCount++;
+                        } else {
+                            deviceCompare[key] = false;
+                        }
+                    }
+
+                    const generalCompare = {};
+                    for (let key of Object.keys(general1)) {
+                        generalCount++;
+                        if (general1[key] === general2[key]) {
+                            generalCompare[key] = true;
+                            generalSameCount++;
+                        } else {
+                            generalCompare[key] = false;
+                        }
+                    }
+
+                    const navigatorCompare = {};
+                    for (let key of Object.keys(navigator1)) {
+                        navigatorCount++;
+                        if (navigator1[key] === navigator2[key]) {
+                            navigatorCompare[key] = true;
+                            navigatorSameCount++;
+                        } else {
+                            navigatorCompare[key] = false;
+                        }
+                    }
+
+                    const deviceSamePercentage = deviceSameCount * 100 / deviceCount;
+                    const generalSamePercentage = generalSameCount * 100 / generalCount;
+                    const navigatorSamePercentage = navigatorSameCount * 100 / navigatorCount;
+                    
+                    console.log('same - true, different - false', {
+                        device: deviceCompare,
+                        general: generalCompare,
+                        navigator: navigatorCompare,
+                    })
+
+                    console.log('same percentage',{
+                        device: deviceSamePercentage,
+                        general: generalSamePercentage,
+                        navigator: navigatorSamePercentage,
+                    })
+                } catch (e) {
+                    console.error('error while read jsons')
+                    console.error(e);
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>JSON diff checker</h1>
+        <div class="textareas-wrapper">
+            <textarea id="json1"></textarea>
+            <textarea id="json2"></textarea>
+        </div>
+        <button id="checkDiff">
+            compare
+        </button>
+    </div>
+
+    <script>
+    </script>
+</body>
+</html>
