@@ -52,6 +52,7 @@
         async function displayNavigatorInfo() {
             const navigatorUtils = new BrowserFingerprint();
             window.generatedInfo = await navigatorUtils.generate();
+            performance.mark('end-fingerprint');
             const infoList = document.getElementById('info-list');
 
             console.log(window.generatedInfo);
