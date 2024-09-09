@@ -937,6 +937,10 @@ class GeneralData {
         return isBlocked;
     }
 
+    isWebSocketSupported() {
+        return !!window.WebSocket;
+    }
+
     getGeneralData() {
         return {
             screenSize: this.getScreenSize(),
@@ -950,6 +954,7 @@ class GeneralData {
             userData: this.isUserDataSupported(),
             indexedDBSupported: this.isIndexedDBSupported(),
             isAdBlockEnabled: this.isAdBlockEnabled(),
+            isWebSocketSupported: this.isWebSocketSupported(),
         }
     }
 }
