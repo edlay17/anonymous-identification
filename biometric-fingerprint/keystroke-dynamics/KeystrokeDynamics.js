@@ -1,6 +1,8 @@
 class KeystrokeDynamics {
     constructor() {
         this.keystrokeData = [];
+        this.lastKeyup = null;
+        this.totalExecutionTime = 0;
 
         this.handleKeydown = this.handleKeydown.bind(this);
         this.handleKeyup = this.handleKeyup.bind(this);
@@ -10,7 +12,8 @@ class KeystrokeDynamics {
     }
 
     handleKeydown(event) {
-        console.log('Keydown', event);
+        performance.mark('start-keydown');
+
         const keyDownTime = Date.now();
 
         this.logEvent({
@@ -19,27 +22,35 @@ class KeystrokeDynamics {
             eventType: 'keydown',
         });
 
-        const previousKeyUpTime = findLastKeyUpEvent(this.keystrokeData);
-
-        if (previousKeyUpTime) {
-            const releasePressTime = keyDownTime - previousKeyUpTime;
+        if (this.lastKeyup) {
+            const releasePressTime = keyDownTime - this.lastKeyup.time;
             
             this.logEvent({
                 key: event.key,
+                prevKey: this.lastKeyup.key,
                 time: releasePressTime,
                 eventType: 'keyReleasePress',
             });
         }
+
+        performance.mark('end-keydown');
+
+        performance.measure('handleKeydown', 'start-keydown', 'end-keydown');
+
+        const measure = performance.getEntriesByName('handleKeydown').pop();
+        this.totalExecutionTime += measure.duration;
+
+        performance.clearMarks();
+        performance.clearMeasures();
     }
 
     handleKeyup(event) {
-        console.log('Keyup', event);
+        performance.mark('start-keyup');
 
         const keyUpTime = Date.now();
 
-        const lastKeyDownEvent = this.keystrokeData.find(elemEvent => elemEvent.key === event.key && e.eventType === 'keydown');
-        const holdTime = lastKeyDownEvent ? keyUpTime - lastKeyDownEvent.keyDownTime : 0;
-        const previousKeyUpTime = findLastKeyUpEvent(this.keystrokeData);
+        const lastKeyDownEvent = this.keystrokeData.find(elemEvent => elemEvent.key === event.key && elemEvent.eventType === 'keydown');
+        const holdTime = lastKeyDownEvent ? keyUpTime - lastKeyDownEvent.time : 0;
     
         this.logEvent({
             key: event.key,
@@ -55,15 +66,32 @@ class KeystrokeDynamics {
             });
         }
 
-        if (previousKeyUpTime) {
-            const releaseTime = keyUpTime - previousKeyUpTime;
+        if (this.lastKeyup) {
+            const releaseTime = keyUpTime - this.lastKeyup.time;
             
             this.logEvent({
                 key: event.key,
+                prevKey: this.lastKeyup.key,
                 time: releaseTime,
-                eventType: 'keyReleaseRealese',
+                eventType: 'keyReleaseRelease',
             });
         }
+
+        this.lastKeyup = {
+            key: event.key,
+            time: keyUpTime,
+            eventType: 'keyup',
+        }
+
+        performance.mark('end-keyup');
+
+        performance.measure('handleKeyup', 'start-keyup', 'end-keyup');
+
+        const measure = performance.getEntriesByName('handleKeyup').pop();
+        this.totalExecutionTime += measure.duration;
+
+        performance.clearMarks();
+        performance.clearMeasures();
     }
 
     logEvent(data) {
@@ -71,23 +99,13 @@ class KeystrokeDynamics {
     }
 
     destroy() {
-        document.removeEventListener('click', this.handleClick);
-        console.log('Event listener removed');
+        document.removeEventListener('keydown', this.handleClick);
+        document.removeEventListener('clikeyupck', this.handleClick);
     }
 
     getDataJSON() {
         return JSON.stringify(this.keystrokeData);
     }
-}
-
-
-function findLastKeyUpEvent(array) {
-    for (let i = array.length - 1; i >= 0; i--) {
-        if (array[i].eventType === 'keyup') {
-            return array[i];
-        }
-    }
-    return undefined;
 }
 
 window.keystrokeDynamics = new KeystrokeDynamics();
